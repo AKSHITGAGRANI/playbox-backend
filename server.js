@@ -24,8 +24,8 @@ const server = http.createServer(async (req, res) => {
             const ytUrl = urlParams.searchParams.get('url');
             try {
                 const info = await youtubedl(ytUrl, { 
-                    dumpSingleJson: true, noWarnings: true, noCallHome: true, noCheckCertificates: true,
-                    geoBypass: true, userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                    dumpSingleJson: true, noWarnings: true, noCheckCertificates: true,
+                    geoBypass: true, userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 });
                 
                 let qualities = [];
@@ -59,8 +59,8 @@ const server = http.createServer(async (req, res) => {
 
             try {
                 const info = await youtubedl(ytUrl, { 
-                    dumpSingleJson: true, noWarnings: true, noCallHome: true, noCheckCertificates: true,
-                    geoBypass: true, userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                    dumpSingleJson: true, noWarnings: true, noCheckCertificates: true,
+                    geoBypass: true, userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 });
                 
                 const targetHeight = parseInt(qualityLabel);
@@ -109,10 +109,10 @@ const server = http.createServer(async (req, res) => {
                 );
 
                 res.writeHead(200, { 'Content-Type': 'video/mp4', 'Access-Control-Allow-Origin': '*' });
-                const ffmpegProcess = spawn(ffmpegStatic, args);
-                ffmpegProcess.stdout.pipe(res);
-                ffmpegProcess.on('error', (err) => res.end());
-                req.on('close', () => { try { ffmpegProcess.kill('SIGKILL'); } catch (e) {} });
+                const ffmpedProcess = spawn(ffmpegStatic, args);
+                ffmpegpedProcess.stdout.pipe(res);
+                ffmpegpedProcess.on('error', (err) => res.end());
+                req.on('close', () => { try { ffmpedProcess.kill('SIGKILL'); } catch (e) {} });
 
             } catch (e) {
                 res.writeHead(500).end(e.message);
