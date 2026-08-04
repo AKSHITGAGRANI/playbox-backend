@@ -1,0 +1,13 @@
+{
+  "name": "playbox-backend",
+  "version": "1.0.0",
+  "description": "PlayBox Cloud Streaming Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "youtube-dl-exec": "^2.5.8"
+  }
+}
