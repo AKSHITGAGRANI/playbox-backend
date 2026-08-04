@@ -24,7 +24,8 @@ const server = http.createServer(async (req, res) => {
             const ytUrl = urlParams.searchParams.get('url');
             try {
                 const info = await youtubedl(ytUrl, { 
-                    dumpSingleJson: true, noWarnings: true, noCallHome: true, noCheckCertificates: true 
+                    dumpSingleJson: true, noWarnings: true, noCallHome: true, noCheckCertificates: true,
+                    geoBypass: true, userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                 });
                 
                 let qualities = [];
@@ -58,7 +59,8 @@ const server = http.createServer(async (req, res) => {
 
             try {
                 const info = await youtubedl(ytUrl, { 
-                    dumpSingleJson: true, noWarnings: true, noCallHome: true, noCheckCertificates: true 
+                    dumpSingleJson: true, noWarnings: true, noCallHome: true, noCheckCertificates: true,
+                    geoBypass: true, userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                 });
                 
                 const targetHeight = parseInt(qualityLabel);
@@ -78,7 +80,7 @@ const server = http.createServer(async (req, res) => {
                 const args = [];
                 args.push('-analyzeduration', '500000', '-probesize', '1000000');
 
-                if (audioFormat && audioFormat.url !== videoFormat.url) {
+                if (audioFormat && audioFormat.url && videoFormat && videoFormat.url && audioFormat.url !== videoFormat.url) {
                     if (seekTime > 0) args.push('-ss', seekTime.toString());
                     args.push('-reconnect', '1', '-reconnect_streamed', '1', '-reconnect_delay_max', '5', '-i', videoFormat.url);
                     
@@ -86,10 +88,12 @@ const server = http.createServer(async (req, res) => {
                     args.push('-reconnect', '1', '-reconnect_streamed', '1', '-reconnect_delay_max', '5', '-i', audioFormat.url);
                     
                     args.push('-map', '0:v:0', '-map', '1:a:0');
-                } else {
+                } else if (videoFormat && videoFormat.url) {
                     if (seekTime > 0) args.push('-ss', seekTime.toString());
                     args.push('-reconnect', '1', '-reconnect_streamed', '1', '-reconnect_delay_max', '5', '-i', videoFormat.url);
                     args.push('-map', '0:v:0', '-map', '0:a:0?');
+                } else {
+                    throw new Error('No valid media stream found');
                 }
 
                 args.push(
@@ -111,7 +115,7 @@ const server = http.createServer(async (req, res) => {
                 req.on('close', () => { try { ffmpegProcess.kill('SIGKILL'); } catch (e) {} });
 
             } catch (e) {
-                res.writeHead(500).end();
+                res.writeHead(500).end(e.message);
             }
             return;
         }
